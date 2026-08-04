@@ -1,9 +1,9 @@
 import { DataTypes, Model } from "sequelize";
 import sequelize from "../config/database.js";
 
-class Role extends Model {}
+class Rider extends Model {}
 
-Role.init(
+Rider.init(
   {
     id: {
       type: DataTypes.UUID,
@@ -11,22 +11,22 @@ Role.init(
       primaryKey: true,
     },
 
-    name: {
-      type: DataTypes.STRING(50),
+    user_id: {
+      type: DataTypes.UUID,
       allowNull: false,
       unique: true,
+      references: {
+        model: "users",
+        key: "id",
+      },
     },
 
-    description: {
-      type: DataTypes.STRING(255),
-      allowNull: true,
-    },
   },
   {
     sequelize,
-    tableName: "roles",
+    tableName: "rider_roles",
     timestamps: true,
   }
 );
 
-export default Role;
+export default Rider;

@@ -1,41 +1,19 @@
-import { DataTypes, Model } from "sequelize";
-import sequelize from "../config/database.js";
+import User from "./User.js";
+import Store from "./Store.js";
+import Rider from "./Rider.js";
 
-class UserRole extends Model {}
+User.hasOne(Rider, {
+    foreignKey: "user_id",
+});
 
-UserRole.init(
-  {
-    id: {
-      type: DataTypes.UUID,
-      defaultValue: DataTypes.UUIDV4,
-      primaryKey: true,
-    },
+Rider.belongsTo(User,{
+    foreignKey: "user_id"
+})
 
-    user_id: {
-      type: DataTypes.UUID,
-      allowNull: false,
-    },
+User.hasMany(Store, {
+    foreignKey: "user_id"
+})
 
-    role_id: {
-      type: DataTypes.UUID,
-      allowNull: false,
-    },
-
-    active: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: true,
-    },
-
-    assigned_at: {
-      type: DataTypes.DATE,
-      defaultValue: DataTypes.NOW,
-    },
-  },
-  {
-    sequelize,
-    tableName: "user_roles",
-    timestamps: true,
-  }
-);
-
-export default UserRole;
+Store.belongsTo(User, {
+    foreignKey: "user_id"
+})

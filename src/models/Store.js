@@ -1,16 +1,15 @@
 import { DataTypes, Model } from "sequelize";
 import sequelize from "../config/database.js";
 
-class UserRole extends Model {}
+class Store extends Model {}
 
-UserRole.init(
+Store.init(
   {
     id: {
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4,
       primaryKey: true,
     },
-
     user_id: {
       type: DataTypes.UUID,
       allowNull: false,
@@ -20,20 +19,22 @@ UserRole.init(
       },
     },
 
-    role_id: {
-      type: DataTypes.UUID,
+    name: {
+      type: DataTypes.STRING(50),
       allowNull: false,
-      references: {
-        model: "roles",
-        key: "id",
-      },
+      unique: true,
+    },
+
+    description: {
+      type: DataTypes.STRING(255),
+      allowNull: true,
     },
   },
   {
     sequelize,
-    tableName: "user_roles",
+    tableName: "stores",
     timestamps: true,
   }
 );
 
-export default UserRole;
+export default Store;
