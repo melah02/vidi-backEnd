@@ -1,7 +1,13 @@
 import { DataTypes, Model } from "sequelize";
-import sequelize from "../config/database.js";
+import bcrypt from "bcrypt";
+import sequelize from "../config/database.js"; 
 
-class User extends Model {}
+class User extends Model {
+  // instance method to check password on login
+  async comparePassword(plainPassword) {
+    return bcrypt.compare(plainPassword, this.password_hash);
+  }
+}
 
 User.init(
   {
@@ -10,74 +16,50 @@ User.init(
       defaultValue: DataTypes.UUIDV4,
       primaryKey: true,
     },
-
     full_name: {
       type: DataTypes.STRING(150),
       allowNull: false,
     },
-
     email: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(150),
       allowNull: false,
       unique: true,
-      validate: {
-        isEmail: true,
-      },
+      validate: { isEmail: true },
     },
-
-    phone_number: {
+    phone: {
       type: DataTypes.STRING(20),
-      allowNull: false,
       unique: true,
     },
-
-    password: {
-      type: DataTypes.STRING,
+    password_hash: {
+      type: DataTypes.TEXT,
       allowNull: false,
     },
-
-    profile_photo: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-
-    status: {
-      type: DataTypes.ENUM(
-        "PENDING",
-        "ACTIVE",
-        "SUSPENDED",
-        "BANNED"
-      ),
-      allowNull: false,
-      defaultValue: "PENDING",
-    },
-
-    online: {
+    is_active: {
       type: DataTypes.BOOLEAN,
-      allowNull: false,
+      defaultValue: true,
+    },
+    is_verified: {
+      type: DataTypes.BOOLEAN,
       defaultValue: false,
-    },
-
-    email_verified_at: {
-      type: DataTypes.DATE,
-      allowNull: true,
-    },
-
-    phone_verified_at: {
-      type: DataTypes.DATE,
-      allowNull: true,
-    },
-
-    last_login_at: {
-      type: DataTypes.DATE,
-      allowNull: true,
     },
   },
   {
     sequelize,
+    modelName: "User",
     tableName: "users",
-    paranoid: true,
-    timestamps: true,
+    hooks: {
+      // hash password automatically whenever it's set/changed
+      beforeCreate: async (user) => {
+        if (user.password_hash) {
+          user.password_hash = await bcrypt.hash(user.password_hash, 10);
+        }
+      },
+      beforeUpdate: async (user) => {
+        if (user.changed("password_hash")) {
+          user.password_hash = await bcrypt.hash(user.password_hash, 10);
+        }
+      },
+    },
   }
 );
 
