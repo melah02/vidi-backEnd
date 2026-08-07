@@ -1,5 +1,5 @@
 import { DataTypes, Model } from "sequelize";
-import sequelize from "../config/database.js";
+import sequelize from "../config/database.js"; // adjust to your actual path
 
 class Store extends Model {}
 
@@ -10,7 +10,7 @@ Store.init(
       defaultValue: DataTypes.UUIDV4,
       primaryKey: true,
     },
-    user_id: {
+    owner_id: {
       type: DataTypes.UUID,
       allowNull: false,
       references: {
@@ -18,22 +18,38 @@ Store.init(
         key: "id",
       },
     },
-
     name: {
-      type: DataTypes.STRING(50),
+      type: DataTypes.STRING(150),
+      allowNull: false,
+    },
+    slug: {
+      type: DataTypes.STRING(150),
       allowNull: false,
       unique: true,
     },
-
     description: {
-      type: DataTypes.STRING(255),
-      allowNull: true,
+      type: DataTypes.TEXT,
+    },
+    online: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
+    logo_url: {
+      type: DataTypes.TEXT,
+    },
+    kyc_status: {
+      type: DataTypes.ENUM("pending", "verified", "rejected"),
+      defaultValue: "pending",
+    },
+    status: {
+      type: DataTypes.ENUM("active", "suspended", "closed"),
+      defaultValue: "active",
     },
   },
   {
     sequelize,
+    modelName: "Store",
     tableName: "stores",
-    timestamps: true,
   }
 );
 
