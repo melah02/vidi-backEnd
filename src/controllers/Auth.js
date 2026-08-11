@@ -48,56 +48,65 @@ export async function register(req, res) {
 }
 
 export async function login(req, res, next) {
+    try {
 
-    const { email, password } = req.body;
+        const { email, password } = req.body;
 
-    if (!email || !password) {
-        return res.status(400).json({ message: "Email and password are required" })
-    }
+        if (!email || !password) {
+            return res.status(400).json({ message: "Email and password are required" })
+        }
 
-    const user = await User.findOne({ where: { email } })
-    
+        const user = await User.findOne({ where: { email } })
 
-    if (!user) {
-        return res.status(401).json({ message: "Invalid credentials" })
-    }
 
-    const isPasswordValid = await user.comparePassword(password)
+        if (!user) {
+            return res.status(401).json({ message: "Invalid credentials" })
+        }
 
-    if (!isPasswordValid) {
-        return res.status(401).json({ message: "Invalid credentials" })
-    }
+        const isPasswordValid = await user.comparePassword(password)
 
-    const token = signToken(user);
-    const store = await Store.findAll({
-        where: { owner_id: req.user.id },
-        attributes: ["id", "name", "slug"]
-    })
+        if (!isPasswordValid) {
+            return res.status(401).json({ message: "Invalid credentials" })
+        }
 
-    if(store.length > 0 ){
-
-        return res.status(200).json({
-            success: true,
-            token,
-            id: user.id,
-            store,
-            full_name: user.full_name,
-            email: user.email,
-            phone: user.phone
+        const token = signToken(user);
+        const store = await Store.findAll({
+            where: { owner_id: user.id },
+            attributes: ["id", "name", "slug"]
         })
-    }else{
+
+        if (store.length > 0) {
+
+            return res.status(200).json({
+                success: true,
+                token,
+                id: user.id,
+                store,
+                full_name: user.full_name,
+                email: user.email,
+                phone: user.phone,
+            })
+        } else {
+            return res.status(200).json({
+                success: true,
+                token,
+                store: null,
+                id: user.id,
+                full_name: user.full_name,
+                email: user.email,
+                phone: user.phone
+            })
+        }
+
+
+
+
+    } catch (error) {
         return res.status(200).json({
-            success: true,
-            token,
-            id: user.id,
-            full_name: user.full_name,
-            email: user.email,
-            phone: user.phone
+            success: false,
+            error
         })
     }
-
-
-
 
 
 }

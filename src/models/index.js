@@ -1,8 +1,7 @@
 import User from "./User.js";
-import Store from "./Store.js";
 import Rider from "./Rider.js";
 import Store from "./Store.js";
-import Product from "./Product.js";
+import Product from "./Products.js";
 import StoreProduct from "./StoreProduct.js";
 import Category from "./Category.js";
 
@@ -16,11 +15,11 @@ Rider.belongsTo(User, {
 })
 
 User.hasMany(Store, {
-    foreignKey: "user_id"
+    foreignKey: "owner_id"
 })
 
 Store.belongsTo(User, {
-    foreignKey: "user_id"
+    foreignKey: "owner_id"
 })
 
 

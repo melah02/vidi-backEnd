@@ -5,6 +5,7 @@ import AuthRoute from './route/Auth.js'
 import storesRoute from './route/stores.js'
 import categoryRoute from './route/category.js'
 import productRoute from './route/product.js'
+import './models/index.js'
 
 const app = express();
 app.use(express.json());

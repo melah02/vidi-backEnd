@@ -5,11 +5,11 @@ import Category from "../models/Category.js"
 
 export async function addProductToStore(req, res) {
   try {
-    const { store_id, category_id, product_name, price, quantity, description, image_url } = req.body;
+    const { store_id, category_id, product_id,product_name, price, quantity, description, image_url } = req.body;
 
-    if (!store_id || !category_id || !product_name || quantity === undefined 
+    if (!store_id || !category_id || !product_id || quantity === undefined 
         || price === undefined) {
-      return res.status(400).json({ message: "store_id, category_id, product_name and price are required" });
+      return res.status(400).json({ message: "store_id, category_id, product_id, and price are required" });
     }
 
     // ownership check — the store being added to must actually belong to this user
@@ -24,23 +24,26 @@ export async function addProductToStore(req, res) {
       return res.status(400).json({ message: "Invalid category_id" });
     }
 
-    // find the product by name, or create it under this category if it doesn't exist yet
-    let product = await Product.findOne({ where: { name: product_name } });
-    if (!product) {
-      product = await Product.create({ name: product_name, category_id: category.id });
-    }
 
-    // prevent the same store from listing the same product twice
-    const alreadyListed = await StoreProduct.findOne({
-      where: { store_id, product_id: product.id },
-    });
-    if (alreadyListed) {
-      return res.status(409).json({ message: "This product is already listed in your store" });
+    if(product_name){
+      // find the product by name, or create it under this category if it doesn't exist yet
+      let product = await Product.findOne({ where: { name: product_name } });
+      if (!product) {
+        product = await Product.create({ name: product_name, category_id: category.id });
+      }
+  
+      // prevent the same store from listing the same product twice
+      const alreadyListed = await StoreProduct.findOne({
+        where: { store_id, product_id: product.id },
+      });
+      if (alreadyListed) {
+        return res.status(409).json({ message: "This product is already listed in your store" });
+      }
     }
 
     const listing = await StoreProduct.create({
       store_id,
-      product_id: product.id,
+      product_id,
       price,
       quantity: quantity || 0,
       description,
@@ -68,8 +71,6 @@ export async function getProductCatalog(req, res) {
 }
 
 export async function getAllProducts(req, res) {
-
-    const store = await Store.findAll({where: {owner_id: req.user.id}})
 
   try {
     const listings = await StoreProduct.findAll({

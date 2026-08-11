@@ -4,7 +4,7 @@ import {requireAuth} from '../middleware/auth.js'
 
 const router = Router()
 
-router.post('/allproducts', requireAuth, getAllProducts)
+router.get('/all', getAllProducts)
 router.post('/addProductToStore', requireAuth, addProductToStore)
 router.get('/', requireAuth, getStoreProducts)
 

@@ -32,6 +32,10 @@ StoreProduct.init(
       type: DataTypes.STRING,
       allowNull: true,
     },
+    image_url: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
   },
   {
     sequelize,
