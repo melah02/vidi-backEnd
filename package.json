@@ -6,7 +6,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon node src/index.js"
+    "dev": "nodemon src/index.js"
   },
   "keywords": [],
   "author": "",
@@ -17,7 +17,10 @@
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
     "jsonwebtoken": "^9.0.3",
+    "mailersend": "^3.2.0",
     "mysql2": "^3.23.2",
+    "nodemailer": "^9.0.5",
+    "resend": "^6.19.0",
     "sequelize": "^6.37.8"
   },
   "devDependencies": {
