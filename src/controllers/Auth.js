@@ -183,9 +183,7 @@ export const passwordResetPost = async (req, res, next) => {
             return res.json({ success: false, message: "Invalid passcode" })
         }
 
-        const hashedPassword = await bcrypt.hash(password, 10)
-
-        user.password_hash = hashedPassword;
+        user.password_hash = newPassword;
         await user.save();
 
         res.status(200).json({

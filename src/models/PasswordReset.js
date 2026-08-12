@@ -4,7 +4,7 @@ import sequelize from "../config/database.js";
 
 class PasswordReset extends Model {
     async comparePassword(plainPassCode) {
-        return bcrypt.compare(plainPassCode, this.password_hash);
+        return bcrypt.compare(plainPassCode, this.passcode_hash);
     }
 }
 
