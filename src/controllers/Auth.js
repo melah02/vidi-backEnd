@@ -79,12 +79,22 @@ export async function login(req, res, next) {
         })
 
         if (store.length > 0) {
+            let storeUser = {
+                user: {
+                    full_name: user.full_name,
+                    email: user.email,
+                    phone: user.phone,
+                    id:user.id
+                },
+                store
+            }
 
             return res.status(200).json({
                 success: true,
                 token,
                 id: user.id,
                 store,
+                storeUser,
                 full_name: user.full_name,
                 email: user.email,
                 phone: user.phone,
@@ -149,7 +159,7 @@ export const passwordResset = async (req, res, next) => {
         }
 
         const response = await sendMessage(messageData);
-        console.log("res",response);
+        console.log("res", response);
 
         res.status(200).json({
             success: true,
@@ -157,7 +167,7 @@ export const passwordResset = async (req, res, next) => {
         })
 
     } catch (error) {
-        console.error("Error",error)
+        console.error("Error", error)
         return res.status(500).json({ success: false, message: "Internal server error" })
     }
 }
@@ -176,7 +186,7 @@ export const passwordResetPost = async (req, res, next) => {
         if (!user) {
             return res.json({ success: false, message: "Email not found" })
         }
-        const isMatch = await  resetPassword.comparePassword(passcode)
+        const isMatch = await resetPassword.comparePassword(passcode)
 
 
         if (!isMatch) {
@@ -192,7 +202,7 @@ export const passwordResetPost = async (req, res, next) => {
         })
 
     } catch (error) {
-        console.error("Error",error)
+        console.error("Error", error)
         return res.status(500).json({ success: false, message: "Internal server error" })
     }
 }
