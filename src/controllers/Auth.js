@@ -9,7 +9,7 @@ const JWT_SECRET = process.env.JWT_SECRET;
 const JWT_EXPIRES_IN = "7d";
 
 function signToken(user) {
-    return jwt.sign({ id: user.id, email: user.email }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN })
+    return jwt.sign({ id: user.id, email: user.email, role:user.role }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN })
 }
 
 export async function register(req, res) {

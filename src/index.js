@@ -5,6 +5,7 @@ import AuthRoute from './route/Auth.js'
 import storesRoute from './route/stores.js'
 import categoryRoute from './route/category.js'
 import productRoute from './route/product.js'
+import adminRoute from './route/admin.js'
 import './models/index.js'
 
 const app = express();
@@ -16,6 +17,7 @@ app.use("/api/auth", AuthRoute);
 app.use("/api/Store", storesRoute);
 app.use("/api/cat", categoryRoute);
 app.use("/api/product", productRoute);
+app.use("/api/admin", adminRoute);
 
 try {
 
