@@ -4,6 +4,7 @@ import Store from "./Store.js";
 import Product from "./Products.js";
 import StoreProduct from "./StoreProduct.js";
 import Category from "./Category.js";
+import Cart from "./Cart.js"
 
 
 User.hasOne(Rider, {
@@ -32,4 +33,7 @@ StoreProduct.belongsTo(Store, { foreignKey: "store_id" });
 Product.hasMany(StoreProduct, { foreignKey: "product_id" });
 StoreProduct.belongsTo(Product, { foreignKey: "product_id" });
 
-export { Store, Product, StoreProduct, Category };
+User.hasOne(Cart,{foreignKey: "user_id"});
+Cart.belongsTo(User, {foreignKey: 'user_id'});
+
+export { Store, Product, StoreProduct, Category, Cart };
