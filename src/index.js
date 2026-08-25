@@ -8,6 +8,7 @@ import productRoute from './route/product.js'
 import adminRoute from './route/admin.js'
 import profile from './route/profile.js'
 import cart from './route/Cart.js'
+import createOrder from './route/order.ts'
 import './models/index.js'
 
 const app = express();
@@ -22,6 +23,7 @@ app.use("/api/product", productRoute);
 app.use("/api/admin", adminRoute);
 app.use("/api/person", profile);
 app.use("/api/cart", cart);
+app.use("/api/order", createOrder );
 
 try {
 
