@@ -7,6 +7,8 @@ import Category from "./Category.js";
 import Cart from "./Cart.js";
 import Order from "./Order.ts";
 import OrderItem from "./OrderItem.ts";
+import Wallet from "./Wallet";
+import WalletTransaction from "./WalletTransaction";
 
 
 User.hasOne(Rider, {
@@ -50,4 +52,26 @@ OrderItem.belongsTo(Order, { foreignKey: "order_id" });
 StoreProduct.hasMany(OrderItem, { foreignKey: "store_product_id" });
 OrderItem.belongsTo(StoreProduct, { foreignKey: "store_product_id" });
 
-export { Store, Product, StoreProduct, Category, Cart, Order, OrderItem };
+User.hasOne(Wallet, {
+  foreignKey: "user_id",
+  as: "wallet",
+  onDelete: "CASCADE",
+});
+
+Wallet.belongsTo(User, {
+  foreignKey: "user_id",
+  as: "user",
+});
+
+Wallet.hasMany(WalletTransaction, {
+  foreignKey: "wallet_id",
+  as: "transactions",
+  onDelete: "CASCADE",
+});
+
+WalletTransaction.belongsTo(Wallet, {
+  foreignKey: "wallet_id",
+  as: "wallet",
+});
+
+export { Store, Product, StoreProduct, Category, Cart, Order, OrderItem, Wallet, WalletTransaction };

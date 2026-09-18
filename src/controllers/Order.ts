@@ -12,6 +12,7 @@ interface AuthRequest extends Request {
 }
 
 export const createOrder = async (req: AuthRequest, res: Response) => {
+  let recorder: any;
 
   try {
     if (!req.user) {
@@ -22,7 +23,7 @@ export const createOrder = async (req: AuthRequest, res: Response) => {
 
     const userId = req.user.id;
     
-  const recorder = await sequelize.transaction();
+  recorder = await sequelize.transaction();
     if (!userId) {
       await recorder.rollback();
       return res
@@ -73,19 +74,21 @@ export const createOrder = async (req: AuthRequest, res: Response) => {
       const storeId = storeProduct.store_id;
       if (!storeGroups[storeId]) storeGroups[storeId] = [];
       storeGroups[storeId].push(item);
-    }
+     }
 
     const createdOrders = [];
 
     for (const storeId of Object.keys(storeGroups)) {
+      
+      
       const groupItems = storeGroups[storeId]!;
       const total = groupItems.reduce(
-        (sum, i) => sum + i.price * i.quantity,
+        (sum, i) => sum + StoreProduct.price * i.quantity,
         0,
       );
 
       const order = await Order.create(
-        { user_id: userId, store_id: storeId, total },
+        { user_id: userId, store_id: storeId, total, status: "pending" },
         { transaction: recorder },
       );
 
