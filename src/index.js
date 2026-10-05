@@ -9,6 +9,7 @@ import adminRoute from './route/admin.js'
 import profile from './route/profile.js'
 import cart from './route/Cart.js'
 import createOrder from './route/order.ts'
+import monify from './route/monify.ts'
 import './models/index.js'
 
 const app = express();
@@ -24,18 +25,21 @@ app.use("/api/admin", adminRoute);
 app.use("/api/person", profile);
 app.use("/api/cart", cart);
 app.use("/api/order", createOrder );
+app.use("/api/createWallet", monify );
 
 try {
 
     await sequelize.authenticate();
     console.log('Connection has been established successfully.')
 
-    await sequelize.sync({alter: true});
+    await sequelize.sync();
 
     const PORT = process.env.PORT || 3000;
 
     app.listen(PORT, () => {
-        console.log(`Server is running on port ${PORT}`);
+        console.log(`Server is running on port ${PORT},
+
+        LocalServer = http://localhost:${PORT}`);
     })
 
 

@@ -1,12 +1,12 @@
-import { DataTypes, Model,type Optional } from "sequelize";
+import { DataTypes, Model, type Optional } from "sequelize";
 import sequelize from "../config/database.js";
 
 interface WalletAttributes {
   id: string;
   user_id: string;
 
-  slimpay_user_id?: string | null;
-  slimpay_wallet_id?: string | null;
+  provider?: "MONNIFY" | null;
+  provider_customer_reference?: string | null;
 
   account_number?: string | null;
   account_name?: string | null;
@@ -21,8 +21,8 @@ interface WalletCreationAttributes
   extends Optional<
     WalletAttributes,
     | "id"
-    | "slimpay_user_id"
-    | "slimpay_wallet_id"
+    | "provider"
+    | "provider_customer_reference"
     | "account_number"
     | "account_name"
     | "bank_name"
@@ -38,8 +38,8 @@ class Wallet
   declare id: string;
   declare user_id: string;
 
-  declare slimpay_user_id: string | null;
-  declare slimpay_wallet_id: string | null;
+  declare provider: "MONNIFY" | null;
+  declare provider_customer_reference: string | null;
 
   declare account_number: string | null;
   declare account_name: string | null;
@@ -48,6 +48,9 @@ class Wallet
   declare balance: string;
   declare status: "PENDING" | "ACTIVE" | "SUSPENDED";
   declare is_verified: boolean;
+
+  declare readonly createdAt: Date;
+  declare readonly updatedAt: Date;
 }
 
 Wallet.init(
@@ -64,14 +67,13 @@ Wallet.init(
       unique: true,
     },
 
-    slimpay_user_id: {
-      type: DataTypes.STRING,
+    provider: {
+      type: DataTypes.ENUM("MONNIFY"),
       allowNull: true,
-      unique: true,
     },
 
-    slimpay_wallet_id: {
-      type: DataTypes.STRING,
+    provider_customer_reference: {
+      type: DataTypes.STRING(100),
       allowNull: true,
       unique: true,
     },
@@ -83,12 +85,12 @@ Wallet.init(
     },
 
     account_name: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(150),
       allowNull: true,
     },
 
     bank_name: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(100),
       allowNull: true,
     },
 
