@@ -1,5 +1,4 @@
 import {
-  testMonnifyConnection,
   createReservedAccount,
 } from "../services/monify.ts";
 

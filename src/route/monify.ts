@@ -1,5 +1,5 @@
 import {Router} from "express";
-import {createReservedAccountController} from "../controler/monify.js";
+import {createReservedAccountController} from "../controllers/monify.js";
 import {requireAuth} from "../middleware/auth.js";
 
 const route = Router(); 
