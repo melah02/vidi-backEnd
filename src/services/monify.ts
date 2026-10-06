@@ -1,28 +1,43 @@
 import axios from "axios";
 
-const MONNIFY_BASE_URL = "https://api.monnify.com/api/v1";
-
 export const getMonnifyToken = async () => {
   try {
+
+  //   const authToken = Buffer.from(`${process.env.MONNIFY_API_KEY}:${process.env.MONNIFY_SECRET_KEY}`).toString('base64');
     
-     const credentials = `${process.env.MONNIFY_API_KEY}:${process.env.MONNIFY_SECRET_KEY}`;
+    
+  //   console.log("Auth Token: .......=======>>>>>>>>>>", authToken); 
+  // const response = await axios.post(
+  //   `${process.env.MONNIFY_BASE_URL}/api/v1/auth/login`,
+  //   {},
+  //   {
+  //     headers: {
+  //       Authorization: `Basic ${authToken}`,
+  //       "Content-Type": "application/json",
+  //     },
+  //   }
+  // );
 
-  const encodedCredentials = Buffer
-    .from(credentials)
-    .toString("base64");
 
-  const response = await axios.post(
-    `${MONNIFY_BASE_URL}/auth/login`,
-    {},
-    {
-      headers: {
-        Authorization: `Basic ${encodedCredentials}`,
-        "Content-Type": "application/json",
-      },
-    }
-  );
+const options = {
+  method: 'POST',
+  url: 'https://sandbox.monnify.com/api/v1/auth/login',
+  headers: {
+    Authorization: 'Basic TUtfVEVTVF9HQzNCOFhHMlhYOkE2NjNOUlpBNTQ0RERQRU03S0RON1o4SFJWNllYRDhT'
+  }
+}
 
-  return response.data.responseBody.accessToken;
+try {
+  const { data } = await axios.request(options)
+  console.log(data.responseBody.accessToken)
+  return data.responseBody.accessToken
+} catch (error) {
+  console.error(error)
+}
+
+
+  // console.log("Monnify Token Response: .......=======>>>>>>>>>>", response.data);
+  // return response;
 
   } catch (error) {
     console.log("Error getting Monnify token:", error);
@@ -47,27 +62,39 @@ export const createReservedAccount = async ({
 try {
   const token = await getMonnifyToken();
 
-  const response = await axios.post(
-    `${MONNIFY_BASE_URL}/api/v2/bank-transfer/reserved-accounts`,
-    {
-      accountReference,
-      accountName,
-      currencyCode: "NGN",
-      contractCode: process.env.MONNIFY_CONTRACT_CODE,
-      customerEmail,
-      customerName,
-      bvn,
-      getAllAvailableBanks: true,
-    },
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    }
-  );
+  console.log(`monnifyToken: ${token}`);
 
-  return response.data;
+
+const options = {
+  method: 'POST',
+  url: 'https://sandbox.monnify.com/api/v1/bank-transfer/reserved-accounts',
+  headers: {
+    Authorization: `Bearer ${token}`,
+    'Content-Type': 'application/json'
+  },
+  data: {
+    contractCode: '5867418298',
+    accountName: accountName,
+    currencyCode: 'NGN',
+    accountReference: accountReference,
+    customerEmail: customerEmail,
+    customerName: customerName,
+    getAllAvailableBanks: true,
+    bvn: bvn,
+    nin: '11212121212',
+    reservedAccountType: 'INVOICE'
+  }
+
+}
+
+try {
+  const { data } = await axios.request(options)
+  console.log(data)
+
+  return data
+} catch (error) {
+  console.error(error)
+}
 } catch (error) {
   console.log("Error creating reserved account:", error);
 }

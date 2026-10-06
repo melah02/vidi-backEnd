@@ -1,13 +1,14 @@
 import { Router } from "express";
-import { createWallet } from "../controllers/wallet.ts";
+import {  getWallet } from "../controllers/wallet.ts";
 import { requireAuth } from "../middleware/auth.js";
 
 const router = Router();
 
-router.post(
-  "/create",
+
+router.get(
+  "/getWallet",
   requireAuth,
-  createWallet
+  getWallet
 );
 
 export default router;

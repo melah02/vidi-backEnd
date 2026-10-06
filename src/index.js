@@ -10,6 +10,7 @@ import profile from './route/profile.js'
 import cart from './route/Cart.js'
 import createOrder from './route/order.ts'
 import monify from './route/monify.ts'
+import getWallet from "./route/wallet.ts"
 import './models/index.js'
 
 const app = express();
@@ -26,6 +27,7 @@ app.use("/api/person", profile);
 app.use("/api/cart", cart);
 app.use("/api/order", createOrder );
 app.use("/api/createWallet", monify );
+app.use("/api/Wallet", getWallet );
 
 try {
 
